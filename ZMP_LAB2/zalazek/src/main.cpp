@@ -5,28 +5,41 @@
 
 using namespace std;
 
+class LibInterface{
+    void *_pLibHnd = nullptr;
+    AbstractInterp4Command *(*_pCreateCmd)(void) = nullptr;
+  public:
+  ~LibInterface() {if(_pLibHnd) dlclose(_pLibHnd);};
+  bool Init(const char *sFileName);
+  AbstractInterp4Command *CreateCmd() { assert(_pCreateCmd); return _pCreateCmd();}
+};
 
-int main()
-{
-  void *pLibHnd_Move = dlopen("libInterp4Move.so",RTLD_LAZY);
-  AbstractInterp4Command *(*pCreateCmd_Move)(void);
-  void *pFun;
-
-  if (!pLibHnd_Move) {
-    cerr << "!!! Brak biblioteki: Interp4Move.so" << endl;
-    return 1;
+bool LibInterface::Init(const char *sFileName){
+  _pLibHnd = dlopen(sFileName,RTLD_LAZY);
+  if (!_pLibHnd) {
+    cerr << "!!! Brak biblioteki: " << sFileName << endl;
+    return false;
   }
-
-
-  pFun = dlsym(pLibHnd_Move,"CreateCmd");
-  if (!pFun) {
+  void *pFun =dlsym(_pLibHnd,"CreateCmd");
+   if (!pFun) {
     cerr << "!!! Nie znaleziono funkcji CreateCmd" << endl;
     return 1;
   }
-  pCreateCmd_Move = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun);
+  _pCreateCmd = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun);
+  return true;
+}
 
 
-  AbstractInterp4Command *pCmd = pCreateCmd_Move();
+int main()
+{
+  LibInterface MoveLibInterface;
+
+  if (!MoveLibInterface.Init("libInterp4Move.so")) {
+    return 1;
+  }
+
+
+  AbstractInterp4Command *pCmd = MoveLibInterface.CreateCmd();
 
   cout << endl;
   cout << pCmd->GetCmdName() << endl;
@@ -38,5 +51,59 @@ int main()
   
   delete pCmd;
 
-  dlclose(pLibHnd_Move);
+  LibInterface SetLibInterface;
+
+  if (!SetLibInterface.Init("libInterp4Set.so")) {
+    return 1;
+  }
+
+    pCmd = SetLibInterface.CreateCmd();
+
+  cout << endl;
+  cout << pCmd->GetCmdName() << endl;
+  cout << endl;
+  pCmd->PrintSyntax();
+  cout << endl;
+  pCmd->PrintCmd();
+  cout << endl;
+  
+  delete pCmd;
+
+  LibInterface RotateLibInterface;
+
+  if (!RotateLibInterface.Init("libInterp4Rotate.so")) {
+    return 1;
+  }
+
+    pCmd = RotateLibInterface.CreateCmd();
+
+  cout << endl;
+  cout << pCmd->GetCmdName() << endl;
+  cout << endl;
+  pCmd->PrintSyntax();
+  cout << endl;
+  pCmd->PrintCmd();
+  cout << endl;
+  
+  delete pCmd;
+
+  LibInterface PauseLibInterface;
+
+  if (!PauseLibInterface.Init("libInterp4Pause.so")) {
+    return 1;
+  }
+
+    pCmd = PauseLibInterface.CreateCmd();
+
+  cout << endl;
+  cout << pCmd->GetCmdName() << endl;
+  cout << endl;
+  pCmd->PrintSyntax();
+  cout << endl;
+  pCmd->PrintCmd();
+  cout << endl;
+  
+  delete pCmd;
+  
 }
+
