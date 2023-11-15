@@ -28,7 +28,7 @@ AbstractInterp4Command* CreateCmd(void)
 /*!
  *
  */
-Interp4Rotate::Interp4Rotate(): _Speed_mmS(0)
+Interp4Rotate::Interp4Rotate(): _Angle_Speed_DegS(0), _Angle_Deg(0), _Name(""), _Axis_Name("")
 {}
 
 
@@ -40,7 +40,7 @@ void Interp4Rotate::PrintCmd() const
   /*
    *  Tu trzeba napisać odpowiednio zmodyfikować kod poniżej.
    */
-  cout << GetCmdName() << " " << _Speed_mmS  << " 10  2" << endl;
+  cout << GetCmdName() << " " << _Name << " " << _Axis_Name << " " << _Angle_Speed_DegS  << " " << _Angle_Deg << endl;
 }
 
 
@@ -94,5 +94,5 @@ AbstractInterp4Command* Interp4Rotate::CreateCmd()
  */
 void Interp4Rotate::PrintSyntax() const
 {
-  cout << "   Rotate  NazwaObiektu  Szybkosc[m/s]  DlugoscDrogi[m]" << endl;
+  cout << "   Rotate  NazwaObiektu NazwaOsi  SzybkoscKatowa[m/s]  Kat[deg]" << endl;
 }

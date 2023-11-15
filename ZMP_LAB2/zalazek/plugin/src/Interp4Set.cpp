@@ -28,7 +28,7 @@ AbstractInterp4Command* CreateCmd(void)
 /*!
  *
  */
-Interp4Set::Interp4Set(): _Speed_mmS(0)
+Interp4Set::Interp4Set(): _X_Value(0), _Y_Value(0), _Z_Value(0), _Name(""), _OX_Angle(0), _OY_Angle(0), _OZ_Angle(0)
 {}
 
 
@@ -40,7 +40,7 @@ void Interp4Set::PrintCmd() const
   /*
    *  Tu trzeba napisać odpowiednio zmodyfikować kod poniżej.
    */
-  cout << GetCmdName() << " " << _Speed_mmS  << " 10  2" << endl;
+  cout << GetCmdName() << " " << _Name << " " << _X_Value << " " << _Y_Value << " " << _Z_Value << " " << _OX_Angle << " " << _OY_Angle << " " << _OZ_Angle <<endl;
 }
 
 
@@ -94,5 +94,8 @@ AbstractInterp4Command* Interp4Set::CreateCmd()
  */
 void Interp4Set::PrintSyntax() const
 {
-  cout << "   Set  NazwaObiektu  Szybkosc[m/s]  DlugoscDrogi[m]" << endl;
+  cout << "   Set  NazwaObiektu  WspX  WspY WspZ katOX katOY katOZ" << endl;
 }
+
+
+// wczytać program przez preprocesor (popen)

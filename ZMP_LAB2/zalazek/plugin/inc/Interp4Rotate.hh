@@ -26,7 +26,10 @@ class Interp4Rotate: public AbstractInterp4Command {
    *  do przechowywania wartości parametrów danego polecenia.
    *  Ponieżej zdefiniowane jest tylko jedno pole jako przykład.
    */
-  double  _Speed_mmS;
+  double  _Angle_Speed_DegS;
+  std::string _Name;
+  std::string _Axis_Name;
+  double _Angle_Deg;
  public:
   /*!
    * \brief

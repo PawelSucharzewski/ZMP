@@ -28,7 +28,7 @@ AbstractInterp4Command* CreateCmd(void)
 /*!
  *
  */
-Interp4Pause::Interp4Pause(): _Speed_mmS(0)
+Interp4Pause::Interp4Pause(): _Time_mmS(0), _Name("")
 {}
 
 
@@ -40,7 +40,7 @@ void Interp4Pause::PrintCmd() const
   /*
    *  Tu trzeba napisać odpowiednio zmodyfikować kod poniżej.
    */
-  cout << GetCmdName() << " " << _Speed_mmS  << " 10  2" << endl;
+  cout << GetCmdName() << _Name <<" " << _Time_mmS  << endl;
 }
 
 
@@ -94,5 +94,5 @@ AbstractInterp4Command* Interp4Pause::CreateCmd()
  */
 void Interp4Pause::PrintSyntax() const
 {
-  cout << "   Pause  NazwaObiektu  Szybkosc[m/s]  DlugoscDrogi[m]" << endl;
+  cout << "  Pause  NazwaObiektu  CzasPauzy[ms]" << endl;
 }
