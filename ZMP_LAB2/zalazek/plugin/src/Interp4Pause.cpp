@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "Interp4Pause.hh"
 
 
@@ -73,9 +74,12 @@ bool Interp4Pause::ExecCmd( AbstractScene      &rScn,
  */
 bool Interp4Pause::ReadParams(std::istream& Strm_CmdsList)
 {
-  /*
-   *  Tu trzeba napisać odpowiedni kod.
-   */
+  std::vector<std::string> arguments;
+    std::string argument;
+    while (Strm_CmdsList >> argument) { 
+      arguments.push_back(argument);
+    }
+    _Time_mmS = std::stod(arguments[0]);
   return true;
 }
 

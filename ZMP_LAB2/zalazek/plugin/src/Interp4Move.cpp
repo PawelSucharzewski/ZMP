@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "Interp4Move.hh"
 
 
@@ -37,7 +38,7 @@ Interp4Move::Interp4Move(): _Speed_mmS(0), _Name(""), _Distance_M(0)
  */
 void Interp4Move::PrintCmd() const
 {
-  cout << GetCmdName() << _Name << _Speed_mmS  << _Distance_M << endl;
+  cout << GetCmdName() << " " << _Name << " " << _Speed_mmS  << " " << _Distance_M << endl;
 }
 
 
@@ -70,9 +71,16 @@ bool Interp4Move::ExecCmd( AbstractScene      &rScn,
  */
 bool Interp4Move::ReadParams(std::istream& Strm_CmdsList)
 {
-  /*
-   *  Tu trzeba napisać odpowiedni kod.
-   */
+  std::vector<std::string> arguments;
+    std::string argument;
+    while (Strm_CmdsList >> argument) { 
+      arguments.push_back(argument);
+    }
+    _Name = arguments[0];
+    _Speed_mmS = std::stod(arguments[1]);
+    _Distance_M = std::stod(arguments[2]);
+
+
   return true;
 }
 

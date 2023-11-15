@@ -9,7 +9,6 @@
 #define LINE_SIZE 1000
 using namespace std;
 
-vector<string> libs_names;
 
 class LibInterface{
     void *_pLibHnd = nullptr;
@@ -53,56 +52,67 @@ bool ExecPreprocesor( const char * NazwaPliku, istringstream &IStrm4Cmds )
     return pclose(pProc) == 0;
 }
 
-void ReadStreamLineByLine(std::istringstream& inputStream) {
+void printCmdValuesAndSyntax(AbstractInterp4Command *_cmdPtr){
+  cout << endl;
+  cout << _cmdPtr->GetCmdName() << endl;
+  cout << endl;
+  _cmdPtr->PrintSyntax();
+  cout << endl;
+  _cmdPtr->PrintCmd();
+  cout << endl;
+}
+
+
+void ReadStreamLineByLine(std::istringstream& inputStream,vector<AbstractInterp4Command*> cmdPtr) {
     std::string line;
+
     while (std::getline(inputStream, line)) {
-        std::cout << "Odczytano linię: " << line << std::endl;
+        std::istringstream lineStream(line);
+        std::string functionName;
+        lineStream >> functionName;
+        if(functionName == "Move"){
+          cmdPtr[0]->ReadParams(lineStream);
+          printCmdValuesAndSyntax(cmdPtr[0]);
+          cout << "Wywołano Move" << endl;
+        }
+        else if(functionName == "Set"){
+          cmdPtr[1]->ReadParams(lineStream);
+          printCmdValuesAndSyntax(cmdPtr[1]);
+          cout << "Wywołano Set" << endl;
+        }
+        else if(functionName == "Pause"){
+          cmdPtr[3]->ReadParams(lineStream);
+          printCmdValuesAndSyntax(cmdPtr[3]);
+          cout << "Wywołano Pause" << endl;
+        }
+        else if(functionName == "Rotate"){
+          cmdPtr[2]->ReadParams(lineStream);
+          printCmdValuesAndSyntax(cmdPtr[2]);
+          cout << "Wywołano Rotate" << endl;
+        }
     }
 }
 
 int main()
 {
-  libs_names.push_back("libInterp4Move.so");
-  libs_names.push_back("libInterp4Set.so");
-  libs_names.push_back("libInterp4Rotate.so");
-  libs_names.push_back("libInterp4Pause.so");
-
-
+  vector<AbstractInterp4Command*> cmdPtr;
   LibInterface MoveLibInterface;
-
   if (!MoveLibInterface.Init("libInterp4Move.so")) {
     return 1;
   }
 
-
   MoveLibInterface._cmdHnd = MoveLibInterface.CreateCmd();
-
-  cout << endl;
-  cout << MoveLibInterface._cmdHnd->GetCmdName() << endl;
-  cout << endl;
-  MoveLibInterface._cmdHnd->PrintSyntax();
-  cout << endl;
-  MoveLibInterface._cmdHnd->PrintCmd();
-  cout << endl;
-  
-  delete MoveLibInterface._cmdHnd;
+  cmdPtr.push_back(MoveLibInterface._cmdHnd);
+  printCmdValuesAndSyntax(MoveLibInterface._cmdHnd);
 
   LibInterface SetLibInterface;
   if (!SetLibInterface.Init("libInterp4Set.so")) {
     return 1;
   }
 
-    SetLibInterface._cmdHnd = SetLibInterface.CreateCmd();
-
-  cout << endl;
-  cout << SetLibInterface._cmdHnd->GetCmdName() << endl;
-  cout << endl; 
-  SetLibInterface._cmdHnd->PrintSyntax();
-  cout << endl;
-  SetLibInterface._cmdHnd->PrintCmd();
-  cout << endl;
-  
-  delete SetLibInterface._cmdHnd;
+  SetLibInterface._cmdHnd = SetLibInterface.CreateCmd();
+  cmdPtr.push_back(SetLibInterface._cmdHnd);
+  printCmdValuesAndSyntax(SetLibInterface._cmdHnd);
 
   LibInterface RotateLibInterface;
 
@@ -110,17 +120,9 @@ int main()
     return 1;
   }
 
-    RotateLibInterface._cmdHnd = RotateLibInterface.CreateCmd();
-
-  cout << endl;
-  cout << RotateLibInterface._cmdHnd->GetCmdName() << endl;
-  cout << endl;
-  RotateLibInterface._cmdHnd->PrintSyntax();
-  cout << endl;
-  RotateLibInterface._cmdHnd->PrintCmd();
-  cout << endl;
-  
-  delete RotateLibInterface._cmdHnd;
+  RotateLibInterface._cmdHnd = RotateLibInterface.CreateCmd();
+  cmdPtr.push_back(RotateLibInterface._cmdHnd);
+  printCmdValuesAndSyntax(RotateLibInterface._cmdHnd);
 
   LibInterface PauseLibInterface;
 
@@ -128,21 +130,14 @@ int main()
     return 1;
   }
 
-    PauseLibInterface._cmdHnd = PauseLibInterface.CreateCmd();
-
-  cout << endl;
-  cout << PauseLibInterface._cmdHnd->GetCmdName() << endl;
-  cout << endl;
-  PauseLibInterface._cmdHnd->PrintSyntax();
-  cout << endl;
-  PauseLibInterface._cmdHnd->PrintCmd();
-  cout << endl;
-  
-  delete PauseLibInterface._cmdHnd;
+  PauseLibInterface._cmdHnd = PauseLibInterface.CreateCmd();
+  printCmdValuesAndSyntax(PauseLibInterface._cmdHnd);
+  cmdPtr.push_back(PauseLibInterface._cmdHnd);
 
   istringstream cmds;
   ExecPreprocesor("cmd.cmd",cmds);
-  ReadStreamLineByLine(cmds);
+  ReadStreamLineByLine(cmds,cmdPtr);
+
   
 }
 
