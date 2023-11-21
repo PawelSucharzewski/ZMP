@@ -41,7 +41,7 @@ void Interp4Pause::PrintCmd() const
   /*
    *  Tu trzeba napisać odpowiednio zmodyfikować kod poniżej.
    */
-  cout << GetCmdName() << _Name <<" " << _Time_mmS  << endl;
+  cout << GetCmdName() << " " << _Name <<" " << _Time_mmS  << endl;
 }
 
 
@@ -74,15 +74,11 @@ bool Interp4Pause::ExecCmd( AbstractScene      &rScn,
  */
 bool Interp4Pause::ReadParams(std::istream& Strm_CmdsList)
 {
-std::string s;
-for(int i = 0; i<1;i++)
-{
-	Strm_CmdsList >> s;
-	std::cout << s << " ";
-}
-std::cout << std::endl;
 
-  return true;
+Strm_CmdsList >> _Name;
+Strm_CmdsList >> _Time_mmS;
+
+return true;
 }
 
 

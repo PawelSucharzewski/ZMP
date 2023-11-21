@@ -71,14 +71,9 @@ bool Interp4Move::ExecCmd( AbstractScene      &rScn,
  */
 bool Interp4Move::ReadParams(std::istream& Strm_CmdsList)
 {
-std::string s;
-for(int i = 0; i<3;i++)
-{
-	Strm_CmdsList >> s;
-	std::cout << s << " ";
-}
-std::cout << std::endl;
-
+  Strm_CmdsList >> _Name;
+  Strm_CmdsList >> _Speed_mmS;
+  Strm_CmdsList >> _Distance_M;
   return true;
 }
 
