@@ -22,12 +22,19 @@ LDFLAGS=-Wall
 
 
 
-interp: obj/main.o
-	g++ ${LDFLAGS} -o interp  obj/main.o -ldl
+interp: obj/main.o obj/LibInterface.o obj/Set4LibInterfaces.o 
+	g++ ${LDFLAGS} -o interp  obj/main.o obj/Set4LibInterfaces.o obj/LibInterface.o -ldl 
 
 obj/main.o: src/main.cpp inc/AbstractInterp4Command.hh inc/AbstractScene.hh\
             inc/AbstractComChannel.hh
 	g++ -c ${CPPFLAGS} -o obj/main.o src/main.cpp
+
+obj/LibInterface.o: src/LibInterface.cpp inc/LibInterface.hh inc/AbstractInterp4Command.hh
+	g++ -c ${CPPFLAGS} -o obj/LibInterface.o src/LibInterface.cpp
+
+obj/Set4LibInterfaces.o: src/Set4LibInterfaces.cpp inc/Set4LibInterfaces.hh inc/LibInterface.hh
+	g++ -c ${CPPFLAGS} -o obj/Set4LibInterfaces.o src/Set4LibInterfaces.cpp
+
 
 doc:
 	cd dox; make

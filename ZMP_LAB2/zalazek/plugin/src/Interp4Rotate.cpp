@@ -74,16 +74,14 @@ bool Interp4Rotate::ExecCmd( AbstractScene      &rScn,
  */
 bool Interp4Rotate::ReadParams(std::istream& Strm_CmdsList)
 {
-  std::vector<std::string> arguments;
-    std::string argument;
-    while (Strm_CmdsList >> argument) { 
-      arguments.push_back(argument);
-    }
-  
-  _Name = arguments[0];
-  _Axis_Name = arguments[1];
-  _Angle_Speed_DegS = std::stod(arguments[2]);
-  _Angle_Deg = std::stod(arguments[3]);
+std::string s;
+for(int i = 0; i<4;i++)
+{
+	Strm_CmdsList >> s;
+	std::cout << s << " ";
+}
+std::cout << std::endl;
+
   return true;
 }
 

@@ -74,19 +74,14 @@ bool Interp4Set::ExecCmd( AbstractScene      &rScn,
  */
 bool Interp4Set::ReadParams(std::istream& Strm_CmdsList)
 {
-  std::vector<std::string> arguments;
-    std::string argument;
-    while (Strm_CmdsList >> argument) { 
-      arguments.push_back(argument);
-    }
-  
-  _Name = arguments[0];
-  _X_Value = std::stod(arguments[1]);
-  _Y_Value = std::stod(arguments[2]);
-  _Z_Value = std::stod(arguments[3]);
-  _OX_Angle = std::stod(arguments[4]);
-  _OY_Angle = std::stod(arguments[5]);
-  _OZ_Angle = std::stod(arguments[6]);
+std::string s;
+for(int i = 0; i<7;i++)
+{
+	Strm_CmdsList >> s;
+	std::cout << s << " ";
+}
+std::cout << std::endl;
+
   return true;
 }
 

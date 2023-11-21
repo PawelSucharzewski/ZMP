@@ -71,15 +71,13 @@ bool Interp4Move::ExecCmd( AbstractScene      &rScn,
  */
 bool Interp4Move::ReadParams(std::istream& Strm_CmdsList)
 {
-  std::vector<std::string> arguments;
-    std::string argument;
-    while (Strm_CmdsList >> argument) { 
-      arguments.push_back(argument);
-    }
-    _Name = arguments[0];
-    _Speed_mmS = std::stod(arguments[1]);
-    _Distance_M = std::stod(arguments[2]);
-
+std::string s;
+for(int i = 0; i<3;i++)
+{
+	Strm_CmdsList >> s;
+	std::cout << s << " ";
+}
+std::cout << std::endl;
 
   return true;
 }

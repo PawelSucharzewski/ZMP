@@ -74,12 +74,14 @@ bool Interp4Pause::ExecCmd( AbstractScene      &rScn,
  */
 bool Interp4Pause::ReadParams(std::istream& Strm_CmdsList)
 {
-  std::vector<std::string> arguments;
-    std::string argument;
-    while (Strm_CmdsList >> argument) { 
-      arguments.push_back(argument);
-    }
-    _Time_mmS = std::stod(arguments[0]);
+std::string s;
+for(int i = 0; i<1;i++)
+{
+	Strm_CmdsList >> s;
+	std::cout << s << " ";
+}
+std::cout << std::endl;
+
   return true;
 }
 
