@@ -140,5 +140,3 @@ ReadFile("config/config.xml",Config);
 
 return 0;
 } 
-
-//siema 
