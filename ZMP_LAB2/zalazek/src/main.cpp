@@ -123,17 +123,6 @@ bool ReadFile(const char* sFileName, Configuration &rConfig)
 
 
 
-void printCmdValuesAndSyntax(AbstractInterp4Command *_cmdPtr){
-  cout << endl;
-  cout << _cmdPtr->GetCmdName() << endl;
-  cout << endl;
-  _cmdPtr->PrintSyntax();
-  cout << endl;
-  _cmdPtr->PrintCmd();
-  cout << endl;
-}
-
-
 int main(int argc, char**argv)
 {
 Set4LibInterfaces set;
@@ -151,3 +140,5 @@ ReadFile("config/config.xml",Config);
 
 return 0;
 } 
+
+//siema 

@@ -1,5 +1,6 @@
 #include "Set4LibInterfaces.hh"
 using namespace std;
+
 bool Set4LibInterfaces::init(std::vector<std::string> plugins)
 {
 	for(vector<string>::iterator it = plugins.begin();
