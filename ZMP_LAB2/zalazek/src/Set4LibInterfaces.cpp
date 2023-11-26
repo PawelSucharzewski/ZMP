@@ -1,55 +1,51 @@
 #include "Set4LibInterfaces.hh"
-using namespace std;
 
-bool Set4LibInterfaces::init(std::vector<std::string> plugins)
+bool Set4LibInterfaces::init(std::vector<std::string> lib_vector)
 {
-	for(vector<string>::iterator it = plugins.begin();
-		it!=plugins.end();++it)
-	{
- shared_ptr<LibInterface> _libtmp = make_shared<LibInterface>();
-	  if(!_libtmp->init(*it))
-		{
-	    cerr << "!!! Brak biblioteki: "<<*it << endl;
-	    return 0;
-		}
+    for (int i = 0; i < lib_vector.size(); i++)
+    {
+        std::shared_ptr<LibInterface> new_library = std::make_shared<LibInterface>();
+    
 
-	  libSet.insert(make_pair(_libtmp->_CmdName(),_libtmp));
-	}
+        new_library->init("libs/" + lib_vector[i]);
+        std::string command_name = lib_vector[i].substr(10, lib_vector[i].length() - 13);
+        std::cout << command_name << std::endl;
 
-		std::map<std::string,std::shared_ptr<LibInterface>>::iterator jt;
+        lib.insert(std::make_pair(command_name, new_library));
+    }
 
-	return 1;
+
+
+    return 0;
 }
 
-bool Set4LibInterfaces::ExecCmd(std::istream &commands, AbstractMobileObj  *pMobObj,  int  Socket)
+AbstractInterp4Command *Set4LibInterfaces::execute(std::string key)
 {
-	string key;
-	shared_ptr<LibInterface> lib;
- while(commands >> key)
-    {
-        map<string, shared_ptr<LibInterface>>::iterator it = libSet.find(key);
+   
+    std::shared_ptr<LibInterface> handle;
+    AbstractInterp4Command *command = nullptr;
 
-        if(it == libSet.end())
+  
+    if (key == "Begin_Parallel_Actions")
+    {
+        parallel = true;
+    }
+    else if (key == "End_Parallel_Actions")
+    {
+        parallel = false;
+    }
+    else
+    {
+        std::map<std::string, std::shared_ptr<LibInterface>>::iterator iterator = lib.find(key);
+        if (iterator == lib.end())
         {
-            cout << "!!! Nie znaleziono polecenia: " << key << endl;
-            return 0;
+            std::cout << "Set4LibInterfaces: Nie znaleziono wtyczki dla polecenia: " << key << std::endl;
+            return nullptr;
         }
 
-
-        lib = it->second;
-
-        cmd = lib->_pCreateCmd();
-
-        cmd->ReadParams(commands);
-
-        cout<< "Wykonuje: " << cmd->GetCmdName() << endl;
-        cout<< "Skladnia: " << endl;
-        cmd->PrintSyntax();
-
-		cmd->PrintCmd();
-
-		delete(cmd);
-	}
-
-	return 1;
+        handle = iterator->second;
+        command = handle->CreateCmd();
+    }
+  
+    return command;
 }

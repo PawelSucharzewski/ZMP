@@ -1,45 +1,7 @@
-#include <iostream>
-#include <sstream>
-#include <dlfcn.h>
-#include <cassert>
-#include "../inc/AbstractInterp4Command.hh"
-#include "../inc/AbstractMobileObj.hh"
-#include "../inc/LibInterface.hh"
-#include "../inc/Set4LibInterfaces.hh"
-#include <xercesc/sax2/SAX2XMLReader.hpp>
-#include <xercesc/sax2/XMLReaderFactory.hpp>
-#include <xercesc/sax2/DefaultHandler.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include "../inc/xmlinterp.hh"
-#include <cstdio>
-#include <vector>
-#define LINE_SIZE 500
-#include <list>
+#include "xmlhandler.hh"
 
 using namespace std;
 using namespace xercesc;
-
-bool ExecPreprocesor( const char * NazwaPliku, istringstream &IStrm4Cmds )
-{
-
-  string Cmd4Preproc = "cpp -P ";
-  char Line[LINE_SIZE];
-  ostringstream OTmpStrm;
-
-  Cmd4Preproc += NazwaPliku;
-
-  FILE* pProc = popen(Cmd4Preproc.c_str(),"r");
-
-  if (pProc==NULL) return false;
-
-  while (fgets(Line,LINE_SIZE,pProc)) {
-  		OTmpStrm << Line;
-  	}
-
-  IStrm4Cmds.str(OTmpStrm.str());
-
-  return pclose(pProc) == 0;
-}
 
 /*!
  * Czyta z pliku opis poleceń i dodaje je do listy komend,
@@ -120,23 +82,3 @@ bool ReadFile(const char* sFileName, Configuration &rConfig)
    delete pHandler;
    return true;
 }
-
-
-
-int main(int argc, char**argv)
-{
-Set4LibInterfaces set;
-vector<string> plugins = {"libInterp4Move.so", "libInterp4Pause.so","libInterp4Rotate.so", "libInterp4Set.so"};
-set.init(plugins);
-
-istringstream command_stream;
-
-ExecPreprocesor("cmd.cmd", command_stream );
-
-set.ExecCmd(command_stream,NULL,6217);
-
-Configuration Config;
-ReadFile("config/config.xml",Config);
-
-return 0;
-} 

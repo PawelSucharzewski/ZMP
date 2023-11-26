@@ -1,41 +1,47 @@
-#include "../inc/LibInterface.hh"
+#include "LibInterface.hh"
 
-using namespace std;
-bool LibInterface::init(std::string lib_name)
+LibInterface::~LibInterface()
 {
-
-  	void *pFun;
-  	_LibHandler = dlopen(lib_name.c_str(),RTLD_LAZY);
-	if(_LibHandler == NULL)
-		{
-		    cerr << "!!! Brak biblioteki:" <<lib_name << endl;
-   			return 0;
-		}
-			cout << "Znaleziono bibliotekę:"<<lib_name<<endl;
-
-	pFun = dlsym(_LibHandler,"CreateCmd");
-	if(pFun == NULL)
-		{
-    		cerr << "!!! Nie znaleziono funkcji CreateCmd" << endl;
-   			return 0;
-		}
-  	_pCreateCmd= reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun);
-	pFun=NULL;
-
-	pFun = dlsym(_LibHandler,"GetCmdName");
-	if(pFun == NULL)
-		{
-    		cerr << "!!! Nie znaleziono funkcji GetCmdName" << endl;
-   			return 0;
-		}
-  	_pGetCmdName= reinterpret_cast<const char* (*)(void)>(pFun);
-	pFun=NULL;
-	return 1;
+    dlclose(_LibHandler);
 }
 
-
-std::string LibInterface::_CmdName()
+bool LibInterface::init(std::string libraryName)
 {
- 	return _pGetCmdName();
+
+    _LibHandler = dlopen(libraryName.c_str(), RTLD_LAZY);
+    void *function;
+    const char *(*getCmdName)(void);
+
+    if (!_LibHandler)
+    {
+        std::cerr << "!!! Brak biblioteki: " << libraryName << std::endl;
+        return 1;
+    }
+
+    function = dlsym(_LibHandler, "CreateCmd");
+
+    if (!function)
+    {
+        std::cerr << "!!! Nie znaleziono funkcji CreateCmd w " << libraryName << std::endl;
+        return 1;
+    }
+
+    this->_pCreateCmd = *reinterpret_cast<AbstractInterp4Command *(**)(void)>(&function);
+
+    function = dlsym(_LibHandler, "GetCmdName");
+
+    if (!function)
+    {
+        std::cerr << "!!! Nie znaleziono funkcji GetCmdName w " << libraryName << std::endl;
+        return 1;
+    }
+
+    getCmdName = reinterpret_cast<const char *(*)(void)>(function);
+    _CmdName = getCmdName();
+    return 0;
 }
 
+AbstractInterp4Command *LibInterface::CreateCmd()
+{
+    return _pCreateCmd();
+}
