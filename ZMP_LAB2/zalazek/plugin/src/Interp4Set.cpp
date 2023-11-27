@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include "Interp4Set.hh"
 
 
@@ -29,7 +28,7 @@ AbstractInterp4Command* CreateCmd(void)
 /*!
  *
  */
-Interp4Set::Interp4Set(): _X_Value(0), _Y_Value(0), _Z_Value(0), _Name(""), _OX_Angle(0), _OY_Angle(0), _OZ_Angle(0)
+Interp4Set::Interp4Set(): _Name(""), _Wsp_x(0), _Wsp_y(0), _Wsp_z(0), _Angle_x(0), _Angle_y(0), _Angle_z(0)
 {}
 
 
@@ -41,7 +40,7 @@ void Interp4Set::PrintCmd() const
   /*
    *  Tu trzeba napisać odpowiednio zmodyfikować kod poniżej.
    */
-  cout << GetCmdName() << " " << _Name << " " << _X_Value << " " << _Y_Value << " " << _Z_Value << " " << _OX_Angle << " " << _OY_Angle << " " << _OZ_Angle <<endl;
+  cout << GetCmdName() << " " << _Name  << _Wsp_x << _Wsp_y << _Wsp_z << _Angle_x << _Angle_y << _Angle_z << endl;
 }
 
 
@@ -57,14 +56,27 @@ const char* Interp4Set::GetCmdName() const
 /*!
  *
  */
-bool Interp4Set::ExecCmd( AbstractScene      &rScn, 
-                           const char         *sMobObjName,
-			   AbstractComChannel &rComChann
-			 )
+bool Interp4Set::ExecCmd(Scene *scene) const
 {
-  /*
-   *  Tu trzeba napisać odpowiedni kod.
-   */
+
+  MobileObj *obj = scene->FindMobileObj(_Name.c_str());
+  Vector3D new_position;
+
+  new_position[0] = _Wsp_x;
+  new_position[1] = _Wsp_y;
+  new_position[2] = _Wsp_z;
+  scene->LockAccess();
+  
+
+  obj->SetPosition_m(new_position);
+  obj->SetAng_Roll_deg(_Angle_x);
+  obj->SetAng_Pitch_deg(_Angle_y);
+  obj->SetAng_Yaw_deg(_Angle_z);
+
+  scene->MarkChange();
+  scene->UnlockAccess();
+  usleep(10000);
+
   return true;
 }
 
@@ -74,15 +86,51 @@ bool Interp4Set::ExecCmd( AbstractScene      &rScn,
  */
 bool Interp4Set::ReadParams(std::istream& Strm_CmdsList)
 {
-  Strm_CmdsList >> _Name;
-  Strm_CmdsList >> _X_Value;
-  Strm_CmdsList >> _Y_Value;
-  Strm_CmdsList >> _Z_Value;
-  Strm_CmdsList >> _OX_Angle;
-  Strm_CmdsList >> _OY_Angle;
-  Strm_CmdsList >> _OZ_Angle;
+  /*
+   *  Tu trzeba napisać odpowiedni kod.
+   */
+  if (!(Strm_CmdsList >> _Name))
+  {
+    std::cout << "Blad wczytywania nazwy obiektu" << std::endl;
+    return 1;
+  }
 
-  return true;
+  if (!(Strm_CmdsList >> _Wsp_x))
+  {
+    std::cout << "Blad wczytywania wspolrzednej x" << std::endl;
+    return 1;
+  }
+
+  if (!(Strm_CmdsList >> _Wsp_y))
+  {
+    std::cout << "Blad wczytywania wspolrzednej y" << std::endl;
+    return 1;
+  }
+
+  if (!(Strm_CmdsList >> _Wsp_z))
+  {
+    std::cout << "Blad wczytywania wspolrzednej z" << std::endl;
+    return 1;
+  }
+
+    if (!(Strm_CmdsList >> _Angle_x))
+  {
+    std::cout << "Blad wczytywania kata z" << std::endl;
+    return 1;
+  }
+
+    if (!(Strm_CmdsList >> _Angle_y))
+  {
+    std::cout << "Blad wczytywania kata z" << std::endl;
+    return 1;
+  }
+
+    if (!(Strm_CmdsList >> _Angle_z))
+  {
+    std::cout << "Blad wczytywania kata z" << std::endl;
+    return 1;
+  }
+  return 0;
 }
 
 
@@ -100,8 +148,5 @@ AbstractInterp4Command* Interp4Set::CreateCmd()
  */
 void Interp4Set::PrintSyntax() const
 {
-  cout << "   Set  NazwaObiektu  WspX  WspY WspZ katOX katOY katOZ" << endl;
+  cout << "   Set nazwa_obiektu wsp_x wsp_y wsp_z kat_OX kat_OY kat_OZ" << endl;
 }
-
-
-// wczytać program przez preprocesor (popen)

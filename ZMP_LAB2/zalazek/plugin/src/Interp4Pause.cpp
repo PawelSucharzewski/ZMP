@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include "Interp4Pause.hh"
 
 
@@ -29,7 +28,7 @@ AbstractInterp4Command* CreateCmd(void)
 /*!
  *
  */
-Interp4Pause::Interp4Pause(): _Time_mmS(0), _Name("")
+Interp4Pause::Interp4Pause(): _Time_ms(0)
 {}
 
 
@@ -41,7 +40,7 @@ void Interp4Pause::PrintCmd() const
   /*
    *  Tu trzeba napisać odpowiednio zmodyfikować kod poniżej.
    */
-  cout << GetCmdName() << " " << _Name <<" " << _Time_mmS  << endl;
+  cout << GetCmdName() << " " << _Time_ms  << endl;
 }
 
 
@@ -57,16 +56,14 @@ const char* Interp4Pause::GetCmdName() const
 /*!
  *
  */
-bool Interp4Pause::ExecCmd( AbstractScene      &rScn, 
-                           const char         *sMobObjName,
-			   AbstractComChannel &rComChann
-			 )
+bool Interp4Pause::ExecCmd(Scene *scene) const
 {
-  /*
-   *  Tu trzeba napisać odpowiedni kod.
-   */
+  scene->LockAccess();
+  usleep(_Time_ms * 1000);
+  scene->UnlockAccess();
   return true;
 }
+
 
 
 /*!
@@ -74,11 +71,12 @@ bool Interp4Pause::ExecCmd( AbstractScene      &rScn,
  */
 bool Interp4Pause::ReadParams(std::istream& Strm_CmdsList)
 {
-
-Strm_CmdsList >> _Name;
-Strm_CmdsList >> _Time_mmS;
-
-return true;
+  if (!(Strm_CmdsList >> _Time_ms))
+  {
+    std::cout << "Blad wczytywania czasu" << std::endl;
+    return 1;
+  }
+  return 0;
 }
 
 
@@ -96,5 +94,5 @@ AbstractInterp4Command* Interp4Pause::CreateCmd()
  */
 void Interp4Pause::PrintSyntax() const
 {
-  cout << "  Pause  NazwaObiektu  CzasPauzy[ms]" << endl;
+  cout << "   Pause czas_pauzy_ms " << endl;
 }
