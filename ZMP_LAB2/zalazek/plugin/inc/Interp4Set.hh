@@ -1,10 +1,11 @@
-#ifndef  COMMAND4Set_HH
-#define  COMMAND4Set_HH
+#ifndef  COMMAND4SET_HH
+#define  COMMAND4SET_HH
 
 #ifndef __GNUG__
 # pragma interface
 # pragma implementation
 #endif
+
 
 #include "AbstractInterp4Command.hh"
 
@@ -26,13 +27,15 @@ class Interp4Set: public AbstractInterp4Command {
    *  do przechowywania wartości parametrów danego polecenia.
    *  Ponieżej zdefiniowane jest tylko jedno pole jako przykład.
    */
-  double  _X_Value;
-  double  _Y_Value;
-  double  _Z_Value;
-  std::string _Name;
-  double _OX_Angle;
-  double _OY_Angle;
-  double _OZ_Angle;
+    std::string _Name;
+    double _Wsp_x;
+    double _Wsp_y;
+    double _Wsp_z;
+    double _Angle_x;
+    double _Angle_y;
+    double _Angle_z;
+  
+  
  public:
   /*!
    * \brief
@@ -66,9 +69,7 @@ class Interp4Set: public AbstractInterp4Command {
    * \retval true - operacja powiodła się,
    * \retval false - w przypadku przeciwnym.
    */
-  virtual bool ExecCmd( AbstractScene      &rScn, 
-                        const char         *sMobObjName,
-                        AbstractComChannel &rComChann ) override;
+  virtual bool ExecCmd(Scene *scene) const override;
   /*!
    * \brief Czyta wartości parametrów danego polecenia
    */

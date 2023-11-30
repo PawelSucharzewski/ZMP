@@ -1,5 +1,5 @@
-#ifndef  COMMAND4Pause_HH
-#define  COMMAND4Pause_HH
+#ifndef  COMMAND4PAUSE_HH
+#define  COMMAND4PAUSE_HH
 
 #ifndef __GNUG__
 # pragma interface
@@ -26,8 +26,7 @@ class Interp4Pause: public AbstractInterp4Command {
    *  do przechowywania wartości parametrów danego polecenia.
    *  Ponieżej zdefiniowane jest tylko jedno pole jako przykład.
    */
-  double  _Time_mmS;
-  std::string _Name;
+  double  _Time_ms;
  public:
   /*!
    * \brief
@@ -61,9 +60,7 @@ class Interp4Pause: public AbstractInterp4Command {
    * \retval true - operacja powiodła się,
    * \retval false - w przypadku przeciwnym.
    */
-  virtual bool ExecCmd( AbstractScene      &rScn, 
-                        const char         *sMobObjName,
-                        AbstractComChannel &rComChann ) override;
+  virtual bool ExecCmd(Scene *scene) const override;
   /*!
    * \brief Czyta wartości parametrów danego polecenia
    */

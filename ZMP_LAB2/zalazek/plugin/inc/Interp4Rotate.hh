@@ -1,5 +1,5 @@
-#ifndef  COMMAND4Rotate_HH
-#define  COMMAND4Rotate_HH
+#ifndef  COMMAND4ROTATE_HH
+#define  COMMAND4ROTATE_HH
 
 #ifndef __GNUG__
 # pragma interface
@@ -26,10 +26,10 @@ class Interp4Rotate: public AbstractInterp4Command {
    *  do przechowywania wartości parametrów danego polecenia.
    *  Ponieżej zdefiniowane jest tylko jedno pole jako przykład.
    */
-  double  _Angle_Speed_DegS;
-  std::string _Name;
-  std::string _Axis_Name;
-  double _Angle_Deg;
+    std::string _Name; 
+    std::string _Axis; 
+    double _Ang_speed;
+    double _Angle;
  public:
   /*!
    * \brief
@@ -63,9 +63,7 @@ class Interp4Rotate: public AbstractInterp4Command {
    * \retval true - operacja powiodła się,
    * \retval false - w przypadku przeciwnym.
    */
-  virtual bool ExecCmd( AbstractScene      &rScn, 
-                        const char         *sMobObjName,
-                        AbstractComChannel &rComChann ) override;
+  virtual bool ExecCmd(Scene *scene) const override;
   /*!
    * \brief Czyta wartości parametrów danego polecenia
    */
