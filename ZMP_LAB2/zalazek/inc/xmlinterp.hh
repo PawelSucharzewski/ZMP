@@ -1,5 +1,5 @@
-#ifndef XMLINTERP4ACTIONS_HH
-#define XMLINTERP4ACTIONS_HH
+#ifndef XMLINTERP_HH
+#define XMLINTERP_HH
 
 #include <string>
 #include <xercesc/util/XMLString.hpp>
@@ -22,6 +22,8 @@
  * pliku XML.
  */
 class XMLInterp4Config : public xercesc::DefaultHandler {
+  private:
+    Configuration* conf;
   public:
    /*!
     * \brief Inicjalizuje obiekt i kojarzy go z listą poleceń robota
